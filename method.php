@@ -32,11 +32,17 @@ class Trans
         while ($row = $query->fetch_array(MYSQLI_ASSOC)) {
             $data[] = $row;
         }
-        $response = [
-            'reference_id' => $data[0]['reference_id'],
-            'invoice_id' => $data[0]['invoice_id'],
-            'status' => $data[0]['status']
-        ];
+        if (!empty($data)) {
+            $response = [
+                'reference_id' => $data[0]['reference_id'],
+                'invoice_id' => $data[0]['invoice_id'],
+                'status' => $data[0]['status']
+            ];
+        } else {
+            $response = [
+                'Data Not Found'
+            ];
+        }
         header('Content-Type: application/json');
         echo json_encode($response);
     }
@@ -58,7 +64,7 @@ class Trans
             $va = '-';
         }
 
-        $query = mysqli_query($conn, "INSERT INTO payment_service SET item_name = '$item_name', amount = '$amount', payment_type = '$payment_type', customer_name = '$customer_name', merchant_id = '$merchant_id', reference_id = '$reference_id', invoice_id = '$invoice_id', status = 'Pending'");
+        $query = mysqli_query($conn, "INSERT INTO trans SET item_name = '$item_name', amount = '$amount', payment_type = '$payment_type', customer_name = '$customer_name', merchant_id = '$merchant_id', reference_id = '$reference_id', invoice_id = '$invoice_id', status = 'Pending'");
         if ($query) {
             $response = [
                 'reference_id' => $reference_id,
@@ -68,7 +74,7 @@ class Trans
         } else {
             $response = [
                 'status' => false,
-                'message' => 'Failed to add transaction'
+                'message' => 'Failed to add transaction' . $conn->error
             ];
         }
         header('Content-Type: application/json');

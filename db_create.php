@@ -2,7 +2,7 @@
 
 require_once('./config/conn.php');
 
-$sql = "CREATE TABLE payment_service (
+$sql = "CREATE TABLE trans (
                     id INT(11) PRIMARY KEY AUTO_INCREMENT,
                     item_name VARCHAR(50),
                     amount VARCHAR(50),
